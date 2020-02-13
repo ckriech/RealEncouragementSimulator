@@ -25,8 +25,10 @@ class PlayState extends FlxState {
 		// canvas = new FlxSprite();
 		// canvas.makeGraphic(FlxG.width, FlxG.height, FlxColor.TRANSPARENT, true);
 		// add(canvas);
-		text = new FlxText(100, 300, 100, "You've got this, bud. You're strong and you'll make it, I'm sure.", 20);
-		text.screenCenter();
+		var phrase:String = Advice.generateHelpfuAdvice();
+		trace(phrase);
+		text = new FlxText(0, 0, FlxG.width, phrase, 30);
+		// text.screenCenter();
 		add(text);
 	}
 
