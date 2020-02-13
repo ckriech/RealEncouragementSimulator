@@ -8,6 +8,62 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
+var Advice = function() { };
+$hxClasses["Advice"] = Advice;
+Advice.__name__ = "Advice";
+Advice.generateHelpfuAdvice = function() {
+	var amount = flixel_FlxG.random.int(10,20);
+	var firstPart = Advice.genAdvice();
+	var head = HxOverrides.substr(firstPart,0,1);
+	var tail = HxOverrides.substr(firstPart,1,null);
+	var advice = "" + head.toUpperCase() + tail;
+	var _g = 0;
+	var _g1 = amount;
+	while(_g < _g1) {
+		var i = _g++;
+		advice += ", " + Advice.genAdvice();
+	}
+	return "" + advice + "!";
+};
+Advice.genAdvice = function() {
+	var ran = flixel_FlxG.random.int(0,4);
+	var result;
+	switch(ran) {
+	case 0:
+		result = Advice.genBasic();
+		break;
+	case 1:
+		result = Advice.genAdjNickname();
+		break;
+	case 2:
+		result = Advice.youLookNiceToday();
+		break;
+	case 3:
+		result = Advice.iLoveYouLikeILove();
+		break;
+	case 4:
+		result = Advice.youLargeQuatityOfDesireableQuality();
+		break;
+	default:
+		result = "whhhhhhhhat??????";
+	}
+	return result;
+};
+Advice.genBasic = function() {
+	return StringArrayExtender.peekRandom(Advice.genericPlatitudes);
+};
+Advice.genAdjNickname = function() {
+	return "you " + StringArrayExtender.peekRandom(Advice.positiveAdjs) + " " + StringArrayExtender.peekRandom(Advice.affectionateNicknanme);
+};
+Advice.youLookNiceToday = function() {
+	return "hey " + StringArrayExtender.peekRandom(Advice.affectionateNicknanme) + ": you look " + StringArrayExtender.peekRandom(Advice.positiveAdjs) + " today";
+};
+Advice.iLoveYouLikeILove = function() {
+	return "I love you like I love " + StringArrayExtender.peekRandom(Advice.positiveNouns);
+};
+Advice.youLargeQuatityOfDesireableQuality = function() {
+	return "you certainly have " + StringArrayExtender.peekRandom(Advice.largeQuantitesOf) + " " + StringArrayExtender.peekRandom(Advice.desireableQualities);
+};
 var lime_app_IModule = function() { };
 $hxClasses["lime.app.IModule"] = lime_app_IModule;
 lime_app_IModule.__name__ = "lime.app.IModule";
@@ -895,9 +951,9 @@ ApplicationMain.create = function(config) {
 	ManifestResources.init(config);
 	var _this = app.meta;
 	if(__map_reserved["build"] != null) {
-		_this.setReserved("build","36");
+		_this.setReserved("build","3");
 	} else {
-		_this.h["build"] = "36";
+		_this.h["build"] = "3";
 	}
 	var _this1 = app.meta;
 	if(__map_reserved["company"] != null) {
@@ -4278,6 +4334,13 @@ DocumentClass.__super__ = Main;
 DocumentClass.prototype = $extend(Main.prototype,{
 	__class__: DocumentClass
 });
+var StringArrayExtender = function() { };
+$hxClasses["StringArrayExtender"] = StringArrayExtender;
+StringArrayExtender.__name__ = "StringArrayExtender";
+StringArrayExtender.peekRandom = function(array) {
+	var index = flixel_FlxG.random.int(0,array.length - 1);
+	return array[index];
+};
 var EReg = function(r,opt) {
 	this.r = new RegExp(r,opt.split("u").join(""));
 };
@@ -5571,8 +5634,9 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 	}
 	,text: null
 	,createPositiveEnvironment: function() {
-		this.text = new flixel_text_FlxText(100,300,100,"You've got this, bud. You're strong and you'll make it, I'm sure.",20);
-		this.text.screenCenter();
+		var phrase = Advice.generateHelpfuAdvice();
+		haxe_Log.trace(phrase,{ fileName : "source/PlayState.hx", lineNumber : 29, className : "PlayState", methodName : "createPositiveEnvironment"});
+		this.text = new flixel_text_FlxText(0,0,flixel_FlxG.width,phrase,30);
 		this.add(this.text);
 	}
 	,update: function(elapsed) {
@@ -5593,7 +5657,7 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 		var currentPercent = howManyComplete - Math.floor(howManyComplete);
 		var currentPosition = currentPercent / 0.166666666666666657;
 		var stage = Math.floor(currentPosition);
-		haxe_Log.trace("totalDuration=" + this.totalDuration + " howManyComplete=" + howManyComplete + " currentPercent=" + currentPercent + " currentPosition=" + currentPosition + " stage=" + stage,{ fileName : "source/PlayState.hx", lineNumber : 93, className : "PlayState", methodName : "generateNextRainbowState"});
+		haxe_Log.trace("totalDuration=" + this.totalDuration + " howManyComplete=" + howManyComplete + " currentPercent=" + currentPercent + " currentPosition=" + currentPosition + " stage=" + stage,{ fileName : "source/PlayState.hx", lineNumber : 86, className : "PlayState", methodName : "generateNextRainbowState"});
 		if(stage == 0) {
 			this.r = 255;
 			this.g = this.getRiseState(this.getDecimal(currentPosition));
@@ -5624,7 +5688,7 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 			this.g = 0;
 			this.b = this.getFallState(this.getDecimal(currentPosition));
 		}
-		haxe_Log.trace("r=" + this.r + " g=" + this.g + " b=" + this.b,{ fileName : "source/PlayState.hx", lineNumber : 142, className : "PlayState", methodName : "generateNextRainbowState"});
+		haxe_Log.trace("r=" + this.r + " g=" + this.g + " b=" + this.b,{ fileName : "source/PlayState.hx", lineNumber : 136, className : "PlayState", methodName : "generateNextRainbowState"});
 		var Red = this.r;
 		var Green = this.g;
 		var Blue = this.b;
@@ -5645,18 +5709,18 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 	}
 	,getRiseState: function(percent) {
 		var result = Math.ceil(percent * 255) | 0;
-		haxe_Log.trace("getRiseState: percent = " + percent + " result=" + result,{ fileName : "source/PlayState.hx", lineNumber : 150, className : "PlayState", methodName : "getRiseState"});
+		haxe_Log.trace("getRiseState: percent = " + percent + " result=" + result,{ fileName : "source/PlayState.hx", lineNumber : 143, className : "PlayState", methodName : "getRiseState"});
 		return result;
 	}
 	,getFallState: function(percent) {
 		var reversePercent = 1 - percent;
 		var result = this.getRiseState(reversePercent);
-		haxe_Log.trace("getFallState: percent = " + percent + " result=" + result,{ fileName : "source/PlayState.hx", lineNumber : 158, className : "PlayState", methodName : "getFallState"});
+		haxe_Log.trace("getFallState: percent = " + percent + " result=" + result,{ fileName : "source/PlayState.hx", lineNumber : 150, className : "PlayState", methodName : "getFallState"});
 		return result;
 	}
 	,getDecimal: function(number) {
 		var result = number - Math.floor(number);
-		haxe_Log.trace("getDecimal: number=" + number + " result=" + result,{ fileName : "source/PlayState.hx", lineNumber : 165, className : "PlayState", methodName : "getDecimal"});
+		haxe_Log.trace("getDecimal: number=" + number + " result=" + result,{ fileName : "source/PlayState.hx", lineNumber : 156, className : "PlayState", methodName : "getDecimal"});
 		return result;
 	}
 	,__class__: PlayState
@@ -69718,7 +69782,7 @@ var lime_utils_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 662380;
+	this.version = 501251;
 };
 $hxClasses["lime.utils.AssetCache"] = lime_utils_AssetCache;
 lime_utils_AssetCache.__name__ = "lime.utils.AssetCache";
@@ -115723,6 +115787,13 @@ openfl_ui_Multitouch.maxTouchPoints = 2;
 openfl_ui_Multitouch.supportedGestures = null;
 openfl_ui_Multitouch.supportsGestureEvents = false;
 openfl_ui_Multitouch.inputMode = 2;
+Advice.positiveAdjs = ["strong","wise","dashing","buff","peerless","powerful","intelligent","perfect","nice"];
+Advice.positiveVerbs = ["win"];
+Advice.largeQuantitesOf = ["a lot of","tons of","fucktons of","huge amounts of","egregious quantities of","big ol' piles of"];
+Advice.desireableQualities = ["tenaciousness","sense of justice","correctness","knowledgeableness","gracefulness"];
+Advice.positiveNouns = ["victory","freedom","the power of winning","competition","the american flag"];
+Advice.affectionateNicknanme = ["tiger","cowboy","kid","man","guy","champion","knight","motherfucker","speciman"];
+Advice.genericPlatitudes = ["you are the best","you can do it","you really look nice today","I'm amazed at your prescence","you can do it"];
 openfl__$Vector_Vector_$Impl_$.__meta__ = { statics : { toNullVector : { SuppressWarnings : ["checkstyle:Dynamic"]}}};
 openfl_display_DisplayObject.__meta__ = { fields : { __cairo : { SuppressWarnings : ["checkstyle:Dynamic"]}, addEventListener : { SuppressWarnings : ["checkstyle:Dynamic"]}, removeEventListener : { SuppressWarnings : ["checkstyle:Dynamic"]}}};
 openfl_display_DisplayObject.__broadcastEvents = new haxe_ds_StringMap();
